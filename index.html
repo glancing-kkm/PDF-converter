@@ -10,28 +10,42 @@
 </head>
 <body>
   <main class="app">
-    <h1>파일을 PDF로 변환하고 병합하기</h1>
-    <p class="subtitle">이미지, 텍스트, 기존 PDF 파일을 업로드하고 PDF로 변환한 뒤 업로드 순서대로 병합할 수 있습니다.</p>
+    <h1>PDF 변환/병합 워크스페이스</h1>
+    <p class="subtitle">왼쪽에서 변환, 오른쪽에서 병합. 드래그앤드롭으로 파일 추가 후 바로 작업하세요.</p>
 
-    <section class="card">
-      <label class="file-input-label" for="fileInput">파일 선택</label>
-      <input id="fileInput" type="file" multiple />
-      <p class="hint">지원 예시: PNG/JPG/WebP, TXT/MD/CSV/JSON, PDF</p>
-    </section>
-
-    <section class="card">
-      <div class="actions">
-        <button id="convertBtn" type="button">개별 PDF 변환</button>
-        <button id="mergeBtn" type="button">업로드 순서대로 병합 PDF 생성</button>
-        <button id="clearBtn" type="button" class="ghost">목록 비우기</button>
+    <section class="split">
+      <div class="panel card">
+        <h2>변환 영역</h2>
+        <p class="hint">이미지/텍스트/PDF 파일을 PDF로 변환합니다.</p>
+        <div id="convertDrop" class="drop-zone" tabindex="0">파일을 여기로 드래그하거나 아래 버튼으로 추가</div>
+        <div class="actions">
+          <button id="pickConvertBtn" type="button">파일 추가</button>
+          <button id="convertAllBtn" type="button">전체 PDF 변환</button>
+          <button id="clearConvertBtn" type="button" class="ghost">변환 목록 비우기</button>
+        </div>
+        <input id="convertInput" type="file" multiple hidden />
+        <ul id="convertList" class="file-list"></ul>
       </div>
-      <p id="statusText" class="status">파일을 업로드하세요.</p>
+
+      <div class="bridge">
+        <button id="moveToMergeBtn" type="button" class="move-btn">변환 완료 -> 병합</button>
+      </div>
+
+      <div class="panel card">
+        <h2>병합 영역</h2>
+        <p class="hint">PDF 파일을 업로드 순서대로 정렬 후 병합합니다.</p>
+        <div id="mergeDrop" class="drop-zone" tabindex="0">PDF를 여기로 드래그앤드롭</div>
+        <div class="actions">
+          <button id="pickMergeBtn" type="button">PDF 추가</button>
+          <button id="mergeBtn" type="button">순서대로 병합 PDF 생성</button>
+          <button id="clearMergeBtn" type="button" class="ghost">병합 목록 비우기</button>
+        </div>
+        <input id="mergeInput" type="file" accept=".pdf,application/pdf" multiple hidden />
+        <div id="mergeGrid" class="merge-grid"></div>
+      </div>
     </section>
 
-    <section class="card">
-      <h2>업로드 목록</h2>
-      <ul id="fileList" class="file-list"></ul>
-    </section>
+    <p id="statusText" class="status">파일을 추가해 작업을 시작하세요.</p>
   </main>
   <script defer type="text/javascript" src="/main.js"></script>
 </body>
