@@ -178,8 +178,8 @@ function renderConvertList() {
 
   if (convertItems.length === 0) {
     const empty = document.createElement("li");
-    empty.className = "file-item";
-    empty.textContent = "변환할 파일이 없습니다.";
+    empty.className = "file-item convert-empty";
+    empty.textContent = "변환 된 파일이 없습니다";
     convertList.appendChild(empty);
     return;
   }
@@ -241,7 +241,7 @@ function renderMergeGrid() {
   if (mergeItems.length === 0) {
     const empty = document.createElement("div");
     empty.className = "file-item merge-empty";
-    empty.textContent = "병합할 PDF가 없습니다.";
+    empty.textContent = "병합 된 PDF가 없습니다";
     mergeGrid.appendChild(empty);
     return;
   }
