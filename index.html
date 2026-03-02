@@ -3,24 +3,39 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>PDF 변환/병합기</title>
+  <title>PDF Converter | 파일 변환 및 병합</title>
+  <meta name="description" content="이미지/텍스트/PDF 파일을 온라인에서 PDF로 변환하고, 업로드 순서대로 PDF를 병합할 수 있는 무료 도구입니다." />
+  <meta name="robots" content="index,follow" />
   <link href='/style.css' rel='stylesheet'>
   <script defer src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
   <script defer src="https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js"></script>
 </head>
 <body>
+  <header class="site-header">
+    <div class="header-inner">
+      <a href="/" class="brand">PDF Converter</a>
+      <nav class="main-nav">
+        <a href="/">홈</a>
+        <a href="/about.html">소개</a>
+        <a href="/privacy.html">개인정보처리방침</a>
+        <a href="/terms.html">이용약관</a>
+        <a href="/contact.html">문의</a>
+      </nav>
+    </div>
+  </header>
+
   <main class="app">
-    <h1>PDF 변환/병합 워크스페이스</h1>
-    <p class="subtitle">왼쪽에서 변환, 오른쪽에서 병합. 드래그앤드롭으로 파일 추가 후 바로 작업하세요.</p>
+    <h1>🧾 PDF 변환/병합 워크스페이스</h1>
+    <p class="subtitle">문서 업로드 -> 변환 -> 병합까지 한 화면에서 처리하는 깔끔한 작업 공간입니다.</p>
 
     <section class="split">
       <div class="panel card">
-        <h2>변환 영역</h2>
-        <p class="hint">이미지/텍스트/PDF 파일을 PDF로 변환합니다.</p>
-        <div id="convertDrop" class="drop-zone" tabindex="0">파일을 여기로 드래그하거나 아래 버튼으로 추가</div>
+        <h2>🪄 변환 영역</h2>
+        <p class="hint">이미지/텍스트/PDF/오피스/HWP 파일을 PDF로 변환합니다.</p>
+        <div id="convertDrop" class="drop-zone" tabindex="0">📥 파일을 여기로 드래그하거나 아래 버튼으로 추가</div>
         <div class="actions">
-          <button id="pickConvertBtn" type="button">파일 추가</button>
-          <button id="convertAllBtn" type="button">전체 PDF 변환</button>
+          <button id="pickConvertBtn" type="button">➕ 파일 추가</button>
+          <button id="convertAllBtn" type="button">⚙️ 전체 PDF 변환</button>
           <button id="clearConvertBtn" type="button" class="ghost">변환 목록 비우기</button>
         </div>
         <input id="convertInput" type="file" multiple hidden />
@@ -28,16 +43,16 @@
       </div>
 
       <div class="bridge">
-        <button id="moveToMergeBtn" type="button" class="move-btn">변환 완료 -> 병합</button>
+        <button id="moveToMergeBtn" type="button" class="move-btn">➡️ 변환 완료 -> 병합</button>
       </div>
 
       <div class="panel card">
-        <h2>병합 영역</h2>
+        <h2>🧩 병합 영역</h2>
         <p class="hint">PDF 파일을 업로드 순서대로 정렬 후 병합합니다.</p>
-        <div id="mergeDrop" class="drop-zone" tabindex="0">PDF를 여기로 드래그앤드롭</div>
+        <div id="mergeDrop" class="drop-zone" tabindex="0">📎 PDF를 여기로 드래그앤드롭</div>
         <div class="actions">
-          <button id="pickMergeBtn" type="button">PDF 추가</button>
-          <button id="mergeBtn" type="button">순서대로 병합 PDF 생성</button>
+          <button id="pickMergeBtn" type="button">➕ PDF 추가</button>
+          <button id="mergeBtn" type="button">🧷 순서대로 병합 PDF 생성</button>
           <button id="clearMergeBtn" type="button" class="ghost">병합 목록 비우기</button>
         </div>
         <input id="mergeInput" type="file" accept=".pdf,application/pdf" multiple hidden />
@@ -46,7 +61,56 @@
     </section>
 
     <p id="statusText" class="status">파일을 추가해 작업을 시작하세요.</p>
+
+    <section class="card info-section">
+      <h2>✨ 이 도구로 할 수 있는 작업</h2>
+      <ul>
+        <li>PNG, JPG, WEBP 등 이미지를 A4 비율 PDF로 변환</li>
+        <li>TXT, CSV, JSON, MD 같은 텍스트 파일을 PDF 문서로 변환</li>
+        <li>DOC, DOCX, XLS, XLSX, PPT, PPTX, HWP 파일을 PDF로 변환</li>
+        <li>변환 완료 파일을 병합 영역으로 즉시 이동</li>
+        <li>PDF 아이콘을 드래그해 순서를 바꾼 뒤 원하는 순서로 병합</li>
+      </ul>
+    </section>
+
+    <section class="card info-section">
+      <h2>🧭 작업 가이드</h2>
+      <ol>
+        <li>왼쪽 변환 영역에 파일을 드래그앤드롭하거나 파일 추가 버튼으로 업로드합니다.</li>
+        <li>전체 PDF 변환 버튼을 눌러 파일별 변환 결과를 확인합니다.</li>
+        <li>중앙의 변환 완료 -> 병합 버튼으로 결과를 오른쪽으로 이동합니다.</li>
+        <li>오른쪽 병합 영역에서 아이콘 순서를 원하는 대로 바꿉니다.</li>
+        <li>순서대로 병합 PDF 생성을 눌러 최종 파일을 다운로드합니다.</li>
+      </ol>
+    </section>
+
+    <section class="card info-section">
+      <h2>❓ 자주 묻는 질문</h2>
+      <h3>Q. 업로드한 파일은 서버에 저장되나요?</h3>
+      <p>현재 버전은 브라우저 내에서만 파일을 처리하도록 설계되어, 일반적인 사용 과정에서 업로드 파일이 별도 서버에 저장되지 않습니다.</p>
+      <h3>Q. 병합 순서는 어떻게 결정되나요?</h3>
+      <p>병합 영역에 표시된 아이콘의 번호 순서대로 병합됩니다. 아이콘을 드래그해 순서를 변경하면 번호가 즉시 다시 계산됩니다.</p>
+      <h3>Q. 모든 형식이 변환되나요?</h3>
+      <p>이미지, 텍스트, PDF, DOC/DOCX/XLS/XLSX/PPT/PPTX/HWP 형식을 지원합니다. 서버 환경에 따라 일부 문서는 폰트/레이아웃이 다를 수 있습니다.</p>
+    </section>
+
+    <section class="card info-section">
+      <h2>📢 서비스 고지</h2>
+      <p>본 서비스는 문서 편집 보조 도구이며, 결과물 정확성은 원본 파일 품질과 브라우저 환경에 따라 달라질 수 있습니다. 중요한 문서는 병합 후 반드시 내용을 재검토하세요.</p>
+    </section>
   </main>
+
+  <footer class="site-footer">
+    <div class="footer-inner">
+      <p>© 2026 PDF Converter. All rights reserved.</p>
+      <p>
+        <a href="/about.html">소개</a>
+        <a href="/privacy.html">개인정보처리방침</a>
+        <a href="/terms.html">이용약관</a>
+        <a href="/contact.html">문의</a>
+      </p>
+    </div>
+  </footer>
   <script defer type="text/javascript" src="/main.js"></script>
 </body>
 </html>

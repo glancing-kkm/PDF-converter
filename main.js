@@ -15,6 +15,7 @@ const statusText = document.getElementById("statusText");
 
 const convertItems = [];
 const mergeItems = [];
+const OFFICE_EXTENSIONS = ["doc", "docx", "xls", "xlsx", "ppt", "pptx", "hwp"];
 
 let dragSourceId = null;
 
@@ -66,9 +67,11 @@ function isTextLike(file) {
 
 function getFileKind(file) {
   const lower = file.name.toLowerCase();
+  const ext = lower.includes(".") ? lower.split(".").pop() : "";
   if (file.type === "application/pdf" || lower.endsWith(".pdf")) return "pdf";
   if (file.type.startsWith("image/")) return "image";
   if (isTextLike(file)) return "text";
+  if (OFFICE_EXTENSIONS.includes(ext)) return "office";
   return "unsupported";
 }
 
@@ -139,7 +142,30 @@ async function convertFileToPdfBytes(file) {
   if (kind === "pdf") return file.arrayBuffer();
   if (kind === "image") return imageFileToPdfBytes(file);
   if (kind === "text") return textFileToPdfBytes(file);
+  if (kind === "office") return convertOfficeFileToPdfBytes(file);
   throw new Error("지원하지 않는 파일 형식");
+}
+
+async function convertOfficeFileToPdfBytes(file) {
+  const formData = new FormData();
+  formData.append("file", file, file.name);
+
+  const response = await fetch("/api/convert-office", {
+    method: "POST",
+    body: formData,
+  });
+
+  if (!response.ok) {
+    let message = "오피스/HWP 파일 변환에 실패했습니다.";
+    try {
+      const json = await response.json();
+      if (json?.error) message = json.error;
+    } catch (error) {
+      // ignore parse error
+    }
+    throw new Error(message);
+  }
+  return response.arrayBuffer();
 }
 
 function makePdfBlobUrl(bytes) {
@@ -258,7 +284,7 @@ function renderMergeGrid() {
 
     const icon = document.createElement("div");
     icon.className = "merge-icon";
-    icon.textContent = "PDF";
+    icon.textContent = "📄";
 
     const name = document.createElement("div");
     name.className = "merge-name";
