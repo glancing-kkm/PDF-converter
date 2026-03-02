@@ -229,7 +229,8 @@ h2 {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(95px, 1fr));
   gap: 10px;
-  min-height: 200px;
+  min-height: 420px;
+  align-content: start;
 }
 
 .merge-item {
@@ -245,6 +246,14 @@ h2 {
 
 .merge-item.dragging {
   opacity: 0.4;
+}
+
+.merge-empty {
+  grid-column: 1 / -1;
+  min-height: 120px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .merge-order {

@@ -240,7 +240,7 @@ function renderMergeGrid() {
 
   if (mergeItems.length === 0) {
     const empty = document.createElement("div");
-    empty.className = "file-item";
+    empty.className = "file-item merge-empty";
     empty.textContent = "병합할 PDF가 없습니다.";
     mergeGrid.appendChild(empty);
     return;
