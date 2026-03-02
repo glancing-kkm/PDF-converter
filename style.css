@@ -118,13 +118,14 @@ h1 {
   border: 2px dashed #abc3ef;
   background: #f7faff;
   border-radius: 10px;
-  min-height: 96px;
+  min-height: 180px;
   display: flex;
   align-items: center;
   justify-content: center;
   text-align: center;
-  padding: 16px;
+  padding: 28px;
   color: #35507e;
+  font-size: 16px;
 }
 
 .drop-zone.dragover {
