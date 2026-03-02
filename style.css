@@ -57,7 +57,7 @@ body {
 }
 
 .app {
-  max-width: 980px;
+  max-width: 1200px;
   margin: 28px auto 40px;
   padding: 0 16px;
 }
@@ -118,7 +118,7 @@ h1 {
   border: 2px dashed #abc3ef;
   background: #f7faff;
   border-radius: 10px;
-  min-height: 180px;
+  min-height: 210px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -126,6 +126,7 @@ h1 {
   padding: 28px;
   color: #35507e;
   font-size: 16px;
+  white-space: nowrap;
 }
 
 .drop-zone.dragover {
@@ -141,6 +142,7 @@ button {
   border-radius: 8px;
   cursor: pointer;
   font-weight: 600;
+  white-space: nowrap;
 }
 
 button:disabled {
