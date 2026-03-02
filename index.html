@@ -1,14 +1,38 @@
 <!doctype html>
-<html lang="en">
+<html lang="ko">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Hello World</title>
+  <title>PDF 변환/병합기</title>
   <link href='/style.css' rel='stylesheet'>
+  <script defer src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script defer src="https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js"></script>
 </head>
 <body>
-  <h1>Hello, world!</h1>
-  <button onclick="console.log('hello');">Press me</button>
+  <main class="app">
+    <h1>파일을 PDF로 변환하고 병합하기</h1>
+    <p class="subtitle">이미지, 텍스트, 기존 PDF 파일을 업로드하고 PDF로 변환한 뒤 업로드 순서대로 병합할 수 있습니다.</p>
+
+    <section class="card">
+      <label class="file-input-label" for="fileInput">파일 선택</label>
+      <input id="fileInput" type="file" multiple />
+      <p class="hint">지원 예시: PNG/JPG/WebP, TXT/MD/CSV/JSON, PDF</p>
+    </section>
+
+    <section class="card">
+      <div class="actions">
+        <button id="convertBtn" type="button">개별 PDF 변환</button>
+        <button id="mergeBtn" type="button">업로드 순서대로 병합 PDF 생성</button>
+        <button id="clearBtn" type="button" class="ghost">목록 비우기</button>
+      </div>
+      <p id="statusText" class="status">파일을 업로드하세요.</p>
+    </section>
+
+    <section class="card">
+      <h2>업로드 목록</h2>
+      <ul id="fileList" class="file-list"></ul>
+    </section>
+  </main>
   <script defer type="text/javascript" src="/main.js"></script>
 </body>
 </html>
