@@ -90,6 +90,21 @@ h1 {
   height: 100%;
 }
 
+.panel-content {
+  display: grid;
+  grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr);
+  gap: 12px;
+  height: calc(100% - 64px);
+}
+
+.panel-main,
+.panel-side {
+  display: grid;
+  align-content: start;
+  gap: 10px;
+  min-width: 0;
+}
+
 .move-btn {
   white-space: nowrap;
   padding: 11px 12px;
@@ -219,7 +234,7 @@ h2 {
 }
 
 .merge-grid {
-  margin-top: 8px;
+  margin-top: 0;
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(95px, 1fr));
   gap: 10px;
@@ -308,7 +323,7 @@ h2 {
 }
 
 .split-meta {
-  margin-top: 12px;
+  margin-top: 0;
   border: 1px solid var(--line);
   border-radius: 8px;
   padding: 10px;
@@ -385,6 +400,11 @@ h2 {
 
   .panel {
     min-height: auto;
+  }
+
+  .panel-content {
+    grid-template-columns: 1fr;
+    height: auto;
   }
 
   .file-item-top {

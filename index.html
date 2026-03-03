@@ -34,43 +34,61 @@
       <div class="panel card">
         <h2>🪄 PDF 변환</h2>
         <p class="hint">이미지/텍스트/PDF/오피스/HWP 파일을 PDF로 변환합니다.</p>
-        <div id="convertDrop" class="drop-zone" tabindex="0">📥 파일을 여기로 드래그하거나 아래 버튼으로 추가</div>
-        <div class="actions">
-          <button id="pickConvertBtn" type="button">➕ 파일 추가</button>
-          <button id="convertAllBtn" type="button">⚙️ 전체 PDF 변환</button>
-          <button id="moveToMergeBtn" type="button" class="move-btn">➡️ 변환 완료 -> 병합</button>
-          <button id="clearConvertBtn" type="button" class="ghost">변환 목록 비우기</button>
+        <div class="panel-content">
+          <div class="panel-main">
+            <div id="convertDrop" class="drop-zone" tabindex="0">📥 파일을 여기로 드래그하거나 아래 버튼으로 추가</div>
+            <div class="actions">
+              <button id="pickConvertBtn" type="button">➕ 파일 추가</button>
+              <button id="convertAllBtn" type="button">⚙️ 전체 PDF 변환</button>
+              <button id="moveToMergeBtn" type="button" class="move-btn">➡️ 변환 완료 -> 병합</button>
+              <button id="clearConvertBtn" type="button" class="ghost">변환 목록 비우기</button>
+            </div>
+          </div>
+          <div class="panel-side">
+            <ul id="convertList" class="file-list"></ul>
+          </div>
         </div>
         <input id="convertInput" type="file" multiple hidden />
-        <ul id="convertList" class="file-list"></ul>
       </div>
 
       <div class="panel card">
         <h2>🧩 PDF 병합</h2>
         <p class="hint">PDF 파일을 업로드 순서대로 정렬 후 병합합니다.</p>
-        <div id="mergeDrop" class="drop-zone" tabindex="0">📎 PDF를 여기로 드래그앤드롭</div>
-        <div class="actions">
-          <button id="pickMergeBtn" type="button">➕ PDF 추가</button>
-          <button id="mergeBtn" type="button">🧷 순서대로 병합 PDF 생성</button>
-          <button id="clearMergeBtn" type="button" class="ghost">병합 목록 비우기</button>
+        <div class="panel-content">
+          <div class="panel-main">
+            <div id="mergeDrop" class="drop-zone" tabindex="0">📎 PDF를 여기로 드래그앤드롭</div>
+            <div class="actions">
+              <button id="pickMergeBtn" type="button">➕ PDF 추가</button>
+              <button id="mergeBtn" type="button">🧷 순서대로 병합 PDF 생성</button>
+              <button id="clearMergeBtn" type="button" class="ghost">병합 목록 비우기</button>
+            </div>
+          </div>
+          <div class="panel-side">
+            <div id="mergeGrid" class="merge-grid"></div>
+          </div>
         </div>
         <input id="mergeInput" type="file" accept=".pdf,application/pdf" multiple hidden />
-        <div id="mergeGrid" class="merge-grid"></div>
       </div>
 
       <div class="panel card">
         <h2>✂️ PDF 분할</h2>
         <p class="hint">PDF 1개를 선택한 뒤, 분할할 페이지를 입력하세요. 예: <code>1,3,5</code> 또는 <code>1-5</code></p>
-        <div id="splitDrop" class="drop-zone" tabindex="0">📄 분할할 PDF를 여기로 드래그앤드롭</div>
-        <div class="actions">
-          <button id="pickSplitBtn" type="button">➕ PDF 선택</button>
-          <button id="splitBtn" type="button">✂️ 페이지 분할 다운로드</button>
-          <button id="clearSplitBtn" type="button" class="ghost">분할 영역 비우기</button>
+        <div class="panel-content">
+          <div class="panel-main">
+            <div id="splitDrop" class="drop-zone" tabindex="0">📄 분할할 PDF를 여기로 드래그앤드롭</div>
+            <div class="actions">
+              <button id="pickSplitBtn" type="button">➕ PDF 선택</button>
+              <button id="splitBtn" type="button">✂️ 페이지 분할 다운로드</button>
+              <button id="clearSplitBtn" type="button" class="ghost">분할 영역 비우기</button>
+            </div>
+          </div>
+          <div class="panel-side">
+            <label class="split-label" for="splitPagesInput">분할 페이지 입력</label>
+            <input id="splitPagesInput" class="split-pages-input" type="text" placeholder="예: 1,3,5 또는 1-5 또는 1,3-5" />
+            <div id="splitMeta" class="split-meta">선택된 PDF가 없습니다.</div>
+          </div>
         </div>
-        <label class="split-label" for="splitPagesInput">분할 페이지 입력</label>
-        <input id="splitPagesInput" class="split-pages-input" type="text" placeholder="예: 1,3,5 또는 1-5 또는 1,3-5" />
         <input id="splitInput" type="file" accept=".pdf,application/pdf" hidden />
-        <div id="splitMeta" class="split-meta">선택된 PDF가 없습니다.</div>
       </div>
     </section>
 
