@@ -357,6 +357,11 @@ h2 {
   flex-wrap: wrap;
 }
 
+.split-pages-input::placeholder {
+  color: var(--muted);
+  font-size: 14px;
+}
+
 .split-pages-input:focus {
   outline: 2px solid #c8dcff;
   border-color: #0b63f6;
@@ -375,6 +380,10 @@ h2 {
   align-items: center;
   justify-content: center;
   text-align: center;
+}
+
+.panel-split .panel-main {
+  gap: 8px;
 }
 
 .info-section h2 {
