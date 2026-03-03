@@ -354,7 +354,14 @@ h2 {
   display: flex;
   align-items: center;
   gap: 8px;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
+  width: 100%;
+}
+
+.panel-split .split-pages-input {
+  flex: 1;
+  width: auto;
+  min-width: 0;
 }
 
 .split-pages-input::placeholder {
