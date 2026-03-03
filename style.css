@@ -80,13 +80,13 @@ h1 {
 
 .split {
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-columns: 1fr;
   gap: 16px;
   align-items: stretch;
 }
 
 .panel {
-  min-height: 640px;
+  min-height: 420px;
   height: 100%;
 }
 
