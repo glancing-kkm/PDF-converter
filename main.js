@@ -254,8 +254,10 @@ function renderConvertList() {
 
 function renderMergeGrid() {
   mergeGrid.innerHTML = "";
+  mergeGrid.classList.remove("is-empty");
 
   if (mergeItems.length === 0) {
+    mergeGrid.classList.add("is-empty");
     const empty = document.createElement("div");
     empty.className = "file-item merge-empty";
     empty.textContent = "병합 된 PDF가 없습니다";

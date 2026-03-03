@@ -271,6 +271,12 @@ h2 {
   text-align: center;
 }
 
+.merge-grid.is-empty {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
 .merge-item {
   border: none;
   border-radius: 10px;
@@ -300,6 +306,7 @@ h2 {
 .merge-empty {
   grid-column: 1 / -1;
   width: 100%;
+  margin: 0;
 }
 
 .merge-order {
