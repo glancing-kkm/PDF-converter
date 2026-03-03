@@ -267,6 +267,10 @@ h2 {
   align-content: start;
 }
 
+.panel-merge .merge-grid {
+  text-align: center;
+}
+
 .merge-item {
   border: none;
   border-radius: 10px;
@@ -295,6 +299,7 @@ h2 {
 
 .merge-empty {
   grid-column: 1 / -1;
+  width: 100%;
 }
 
 .merge-order {
@@ -364,7 +369,7 @@ h2 {
   border-radius: 8px;
   padding: 12px;
   color: var(--muted);
-  font-size: 14px;
+  font-size: 16px;
   background: transparent;
   display: flex;
   align-items: center;
