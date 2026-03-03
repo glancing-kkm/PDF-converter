@@ -45,7 +45,9 @@
             </div>
           </div>
           <div class="panel-side">
-            <ul id="convertList" class="file-list"></ul>
+            <div class="result-zone">
+              <ul id="convertList" class="file-list"></ul>
+            </div>
           </div>
         </div>
         <input id="convertInput" type="file" multiple hidden />
@@ -64,7 +66,9 @@
             </div>
           </div>
           <div class="panel-side">
-            <div id="mergeGrid" class="merge-grid"></div>
+            <div class="result-zone">
+              <div id="mergeGrid" class="merge-grid"></div>
+            </div>
           </div>
         </div>
         <input id="mergeInput" type="file" accept=".pdf,application/pdf" multiple hidden />
@@ -76,16 +80,18 @@
         <div class="panel-content">
           <div class="panel-main">
             <div id="splitDrop" class="drop-zone" tabindex="0">📄 분할할 PDF를 여기로 드래그앤드롭</div>
+            <label class="split-label" for="splitPagesInput">분할 페이지 입력</label>
+            <input id="splitPagesInput" class="split-pages-input" type="text" placeholder="예: 1,3,5 또는 1-5 또는 1,3-5" />
             <div class="actions">
-              <button id="pickSplitBtn" type="button">➕ PDF 선택</button>
+              <button id="pickSplitBtn" type="button">➕ PDF 추가</button>
               <button id="splitBtn" type="button">✂️ 페이지 분할 다운로드</button>
               <button id="clearSplitBtn" type="button" class="ghost">분할 영역 비우기</button>
             </div>
           </div>
           <div class="panel-side">
-            <label class="split-label" for="splitPagesInput">분할 페이지 입력</label>
-            <input id="splitPagesInput" class="split-pages-input" type="text" placeholder="예: 1,3,5 또는 1-5 또는 1,3-5" />
-            <div id="splitMeta" class="split-meta">선택된 PDF가 없습니다.</div>
+            <div class="result-zone">
+              <div id="splitMeta" class="split-meta">선택된 PDF가 없습니다.</div>
+            </div>
           </div>
         </div>
         <input id="splitInput" type="file" accept=".pdf,application/pdf" hidden />
