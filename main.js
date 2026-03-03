@@ -1,21 +1,33 @@
 const convertInput = document.getElementById("convertInput");
 const mergeInput = document.getElementById("mergeInput");
+const splitInput = document.getElementById("splitInput");
 const convertDrop = document.getElementById("convertDrop");
 const mergeDrop = document.getElementById("mergeDrop");
+const splitDrop = document.getElementById("splitDrop");
 const pickConvertBtn = document.getElementById("pickConvertBtn");
 const pickMergeBtn = document.getElementById("pickMergeBtn");
+const pickSplitBtn = document.getElementById("pickSplitBtn");
 const convertAllBtn = document.getElementById("convertAllBtn");
 const mergeBtn = document.getElementById("mergeBtn");
+const splitBtn = document.getElementById("splitBtn");
 const moveToMergeBtn = document.getElementById("moveToMergeBtn");
 const clearConvertBtn = document.getElementById("clearConvertBtn");
 const clearMergeBtn = document.getElementById("clearMergeBtn");
+const clearSplitBtn = document.getElementById("clearSplitBtn");
 const convertList = document.getElementById("convertList");
 const mergeGrid = document.getElementById("mergeGrid");
+const splitPagesInput = document.getElementById("splitPagesInput");
+const splitMeta = document.getElementById("splitMeta");
 const statusText = document.getElementById("statusText");
 
 const convertItems = [];
 const mergeItems = [];
 const OFFICE_EXTENSIONS = ["doc", "docx", "xls", "xlsx", "ppt", "pptx", "hwp"];
+const splitItem = {
+  name: "",
+  pdfBytes: null,
+  pageCount: 0,
+};
 
 let dragSourceId = null;
 
@@ -27,13 +39,18 @@ function setBusyState(isBusy) {
   [
     convertInput,
     mergeInput,
+    splitInput,
     pickConvertBtn,
     pickMergeBtn,
+    pickSplitBtn,
     convertAllBtn,
     mergeBtn,
+    splitBtn,
     moveToMergeBtn,
     clearConvertBtn,
     clearMergeBtn,
+    clearSplitBtn,
+    splitPagesInput,
   ].forEach((el) => {
     el.disabled = isBusy;
   });
@@ -309,6 +326,14 @@ function renderMergeGrid() {
   });
 }
 
+function renderSplitMeta() {
+  if (!splitItem.pdfBytes) {
+    splitMeta.textContent = "선택된 PDF가 없습니다.";
+    return;
+  }
+  splitMeta.textContent = `선택 파일: ${splitItem.name} | 전체 페이지: ${splitItem.pageCount}`;
+}
+
 function addToConvert(files) {
   const incoming = Array.from(files);
   incoming.forEach((file) => {
@@ -350,6 +375,33 @@ async function addToMerge(files) {
   updateStatus(`병합 영역에 PDF ${added}개를 추가했습니다.`);
 }
 
+async function setSplitSource(file) {
+  const lower = file.name.toLowerCase();
+  const isPdf = file.type === "application/pdf" || lower.endsWith(".pdf");
+  if (!isPdf) {
+    updateStatus("PDF 파일만 분할할 수 있습니다.");
+    return;
+  }
+
+  try {
+    const bytes = await file.arrayBuffer();
+    const src = await PDFLib.PDFDocument.load(bytes);
+    splitItem.name = file.name;
+    splitItem.pdfBytes = bytes;
+    splitItem.pageCount = src.getPageCount();
+    renderSplitMeta();
+    updateStatus(`분할용 PDF를 불러왔습니다. (${splitItem.pageCount}페이지)`);
+  } catch (error) {
+    updateStatus(`PDF 로딩 실패: ${error.message}`);
+  }
+}
+
+function addToSplit(files) {
+  const first = Array.from(files)[0];
+  if (!first) return;
+  setSplitSource(first);
+}
+
 function bindDropZone(zone, onFiles) {
   zone.addEventListener("dragover", (event) => {
     event.preventDefault();
@@ -365,6 +417,59 @@ function bindDropZone(zone, onFiles) {
     if (!files || files.length === 0) return;
     onFiles(files);
   });
+}
+
+function parsePageSelection(input, pageCount) {
+  const text = input.trim();
+  if (!text) {
+    throw new Error("분할할 페이지를 입력해 주세요.");
+  }
+
+  const tokens = text.split(",").map((token) => token.trim()).filter(Boolean);
+  if (tokens.length === 0) {
+    throw new Error("페이지 입력 형식이 올바르지 않습니다.");
+  }
+
+  const seen = new Set();
+  const orderedPages = [];
+  tokens.forEach((token) => {
+    const rangeMatch = token.match(/^(\d+)\s*-\s*(\d+)$/);
+    if (rangeMatch) {
+      const start = Number(rangeMatch[1]);
+      const end = Number(rangeMatch[2]);
+      if (start > end) {
+        throw new Error(`범위 입력 오류: ${token} (시작 페이지가 더 작아야 합니다)`);
+      }
+      for (let page = start; page <= end; page += 1) {
+        if (page < 1 || page > pageCount) {
+          throw new Error(`페이지 범위를 벗어났습니다: ${page} (1-${pageCount})`);
+        }
+        if (!seen.has(page)) {
+          seen.add(page);
+          orderedPages.push(page);
+        }
+      }
+      return;
+    }
+
+    if (!/^\d+$/.test(token)) {
+      throw new Error(`페이지 입력 오류: ${token}`);
+    }
+
+    const page = Number(token);
+    if (page < 1 || page > pageCount) {
+      throw new Error(`페이지 범위를 벗어났습니다: ${page} (1-${pageCount})`);
+    }
+    if (!seen.has(page)) {
+      seen.add(page);
+      orderedPages.push(page);
+    }
+  });
+
+  if (orderedPages.length === 0) {
+    throw new Error("분할할 페이지가 없습니다.");
+  }
+  return orderedPages;
 }
 
 async function convertAll() {
@@ -458,6 +563,41 @@ async function mergeByOrder() {
   }
 }
 
+async function splitPdfByPages() {
+  if (!splitItem.pdfBytes) {
+    updateStatus("먼저 분할할 PDF를 선택해 주세요.");
+    return;
+  }
+
+  let selectedPages = [];
+  try {
+    selectedPages = parsePageSelection(splitPagesInput.value, splitItem.pageCount);
+  } catch (error) {
+    updateStatus(error.message);
+    return;
+  }
+
+  setBusyState(true);
+  updateStatus(`PDF 분할 중... (${selectedPages.length}개 페이지)`);
+
+  try {
+    const src = await PDFLib.PDFDocument.load(splitItem.pdfBytes);
+    for (let i = 0; i < selectedPages.length; i += 1) {
+      const pageNumber = selectedPages[i];
+      const out = await PDFLib.PDFDocument.create();
+      const [copied] = await out.copyPages(src, [pageNumber - 1]);
+      out.addPage(copied);
+      const bytes = await out.save();
+      downloadBytes(`${baseName(splitItem.name)}-p${pageNumber}.pdf`, bytes);
+    }
+    updateStatus(`PDF 분할 완료: ${selectedPages.length}개 파일 다운로드를 시작했습니다.`);
+  } catch (error) {
+    updateStatus(`PDF 분할 실패: ${error.message}`);
+  } finally {
+    setBusyState(false);
+  }
+}
+
 function clearConvertList() {
   convertItems.forEach((item) => {
     if (item.downloadUrl) URL.revokeObjectURL(item.downloadUrl);
@@ -473,8 +613,18 @@ function clearMergeList() {
   updateStatus("병합 목록을 비웠습니다.");
 }
 
+function clearSplitSource() {
+  splitItem.name = "";
+  splitItem.pdfBytes = null;
+  splitItem.pageCount = 0;
+  splitPagesInput.value = "";
+  renderSplitMeta();
+  updateStatus("분할 영역을 비웠습니다.");
+}
+
 pickConvertBtn.addEventListener("click", () => convertInput.click());
 pickMergeBtn.addEventListener("click", () => mergeInput.click());
+pickSplitBtn.addEventListener("click", () => splitInput.click());
 convertInput.addEventListener("change", (event) => {
   const files = event.target.files;
   if (files && files.length > 0) addToConvert(files);
@@ -485,15 +635,24 @@ mergeInput.addEventListener("change", (event) => {
   if (files && files.length > 0) addToMerge(files);
   mergeInput.value = "";
 });
+splitInput.addEventListener("change", (event) => {
+  const files = event.target.files;
+  if (files && files.length > 0) addToSplit(files);
+  splitInput.value = "";
+});
 
 bindDropZone(convertDrop, addToConvert);
 bindDropZone(mergeDrop, addToMerge);
+bindDropZone(splitDrop, addToSplit);
 
 convertAllBtn.addEventListener("click", convertAll);
 moveToMergeBtn.addEventListener("click", moveConvertedToMerge);
 mergeBtn.addEventListener("click", mergeByOrder);
+splitBtn.addEventListener("click", splitPdfByPages);
 clearConvertBtn.addEventListener("click", clearConvertList);
 clearMergeBtn.addEventListener("click", clearMergeList);
+clearSplitBtn.addEventListener("click", clearSplitSource);
 
 renderConvertList();
 renderMergeGrid();
+renderSplitMeta();

@@ -80,7 +80,7 @@ h1 {
 
 .split {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 16px;
   align-items: stretch;
 }
@@ -88,13 +88,6 @@ h1 {
 .panel {
   min-height: 640px;
   height: 100%;
-}
-
-.bridge {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  min-height: 640px;
 }
 
 .move-btn {
@@ -127,7 +120,7 @@ h1 {
   padding: 28px;
   color: #35507e;
   font-size: 16px;
-  white-space: nowrap;
+  white-space: normal;
 }
 
 .drop-zone.dragover {
@@ -292,6 +285,38 @@ h2 {
   overflow-wrap: anywhere;
 }
 
+.split-label {
+  display: block;
+  margin: 4px 0 8px;
+  font-weight: 600;
+  font-size: 14px;
+  color: #2c3f5a;
+}
+
+.split-pages-input {
+  width: 100%;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 10px 12px;
+  font-size: 14px;
+  color: #1f334f;
+}
+
+.split-pages-input:focus {
+  outline: 2px solid #c8dcff;
+  border-color: #0b63f6;
+}
+
+.split-meta {
+  margin-top: 12px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 10px;
+  color: var(--muted);
+  font-size: 14px;
+  background: #f9fbff;
+}
+
 .info-section h2 {
   margin-bottom: 10px;
 }
@@ -356,10 +381,6 @@ h2 {
 
   .split {
     grid-template-columns: 1fr;
-  }
-
-  .bridge {
-    min-height: auto;
   }
 
   .panel {
