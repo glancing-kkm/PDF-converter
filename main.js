@@ -42,6 +42,13 @@ function moveMergeItem(fromId, toId) {
   updateStatus("병합 순서를 변경했습니다.");
 }
 
+function startMergeDrag(event, card, itemId) {
+  dragSourceId = itemId;
+  card.classList.add("dragging");
+  event.dataTransfer?.setData("text/plain", itemId);
+  if (event.dataTransfer) event.dataTransfer.effectAllowed = "move";
+}
+
 function updateStatus(message) {
   statusText.textContent = message;
 }
@@ -310,10 +317,7 @@ function renderMergeGrid() {
     card.dataset.id = item.id;
 
     card.addEventListener("dragstart", (event) => {
-      dragSourceId = item.id;
-      card.classList.add("dragging");
-      event.dataTransfer?.setData("text/plain", item.id);
-      if (event.dataTransfer) event.dataTransfer.effectAllowed = "move";
+      startMergeDrag(event, card, item.id);
     });
 
     card.addEventListener("dragend", () => {
@@ -337,10 +341,7 @@ function renderMergeGrid() {
     order.draggable = true;
     order.title = "순번을 드래그해 순서를 변경하세요";
     order.addEventListener("dragstart", (event) => {
-      dragSourceId = item.id;
-      card.classList.add("dragging");
-      event.dataTransfer?.setData("text/plain", item.id);
-      if (event.dataTransfer) event.dataTransfer.effectAllowed = "move";
+      startMergeDrag(event, card, item.id);
     });
     order.addEventListener("dragend", () => {
       dragSourceId = null;
@@ -351,6 +352,14 @@ function renderMergeGrid() {
     icon.className = "merge-icon";
     icon.textContent = "📄";
     icon.title = "드래그해서 순서를 변경하세요";
+    icon.draggable = true;
+    icon.addEventListener("dragstart", (event) => {
+      startMergeDrag(event, card, item.id);
+    });
+    icon.addEventListener("dragend", () => {
+      dragSourceId = null;
+      card.classList.remove("dragging");
+    });
 
     const name = document.createElement("div");
     name.className = "merge-name";
