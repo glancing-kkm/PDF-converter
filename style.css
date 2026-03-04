@@ -323,6 +323,11 @@ h2 {
   align-items: center;
   justify-content: center;
   font-weight: 700;
+  cursor: grab;
+}
+
+.merge-order:active {
+  cursor: grabbing;
 }
 
 .merge-icon {

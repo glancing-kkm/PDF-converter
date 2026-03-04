@@ -31,6 +31,17 @@ const splitItem = {
 
 let dragSourceId = null;
 
+function moveMergeItem(fromId, toId) {
+  if (!fromId || fromId === toId) return;
+  const fromIndex = mergeItems.findIndex((x) => x.id === fromId);
+  const toIndex = mergeItems.findIndex((x) => x.id === toId);
+  if (fromIndex < 0 || toIndex < 0) return;
+  const [moved] = mergeItems.splice(fromIndex, 1);
+  mergeItems.splice(toIndex, 0, moved);
+  renderMergeGrid();
+  updateStatus("병합 순서를 변경했습니다.");
+}
+
 function updateStatus(message) {
   statusText.textContent = message;
 }
@@ -271,9 +282,11 @@ function renderMergeGrid() {
     card.draggable = true;
     card.dataset.id = item.id;
 
-    card.addEventListener("dragstart", () => {
+    card.addEventListener("dragstart", (event) => {
       dragSourceId = item.id;
       card.classList.add("dragging");
+      event.dataTransfer?.setData("text/plain", item.id);
+      if (event.dataTransfer) event.dataTransfer.effectAllowed = "move";
     });
 
     card.addEventListener("dragend", () => {
@@ -287,19 +300,25 @@ function renderMergeGrid() {
 
     card.addEventListener("drop", (event) => {
       event.preventDefault();
-      if (!dragSourceId || dragSourceId === item.id) return;
-      const fromIndex = mergeItems.findIndex((x) => x.id === dragSourceId);
-      const toIndex = mergeItems.findIndex((x) => x.id === item.id);
-      if (fromIndex < 0 || toIndex < 0) return;
-      const [moved] = mergeItems.splice(fromIndex, 1);
-      mergeItems.splice(toIndex, 0, moved);
-      renderMergeGrid();
-      updateStatus("병합 순서를 변경했습니다.");
+      const sourceId = dragSourceId || event.dataTransfer?.getData("text/plain");
+      moveMergeItem(sourceId, item.id);
     });
 
     const order = document.createElement("div");
     order.className = "merge-order";
     order.textContent = String(index + 1);
+    order.draggable = true;
+    order.title = "순번을 드래그해 순서를 변경하세요";
+    order.addEventListener("dragstart", (event) => {
+      dragSourceId = item.id;
+      card.classList.add("dragging");
+      event.dataTransfer?.setData("text/plain", item.id);
+      if (event.dataTransfer) event.dataTransfer.effectAllowed = "move";
+    });
+    order.addEventListener("dragend", () => {
+      dragSourceId = null;
+      card.classList.remove("dragging");
+    });
 
     const icon = document.createElement("div");
     icon.className = "merge-icon";
