@@ -80,6 +80,12 @@ function baseName(name) {
   return parts.join(".");
 }
 
+function getFileExtension(name) {
+  const lower = name.toLowerCase();
+  if (!lower.includes(".")) return "";
+  return lower.split(".").pop();
+}
+
 function isTextLike(file) {
   const textTypes = [
     "text/plain",
@@ -95,12 +101,26 @@ function isTextLike(file) {
 
 function getFileKind(file) {
   const lower = file.name.toLowerCase();
-  const ext = lower.includes(".") ? lower.split(".").pop() : "";
+  const ext = getFileExtension(lower);
   if (file.type === "application/pdf" || lower.endsWith(".pdf")) return "pdf";
   if (file.type.startsWith("image/")) return "image";
   if (isTextLike(file)) return "text";
   if (OFFICE_EXTENSIONS.includes(ext)) return "office";
   return "unsupported";
+}
+
+function getIconForFile(file) {
+  const ext = getFileExtension(file.name);
+  if (ext === "xls" || ext === "xlsx") return "📊";
+  if (ext === "ppt" || ext === "pptx") return "📽️";
+  if (ext === "doc" || ext === "docx") return "📘";
+  if (ext === "hwp") return "📕";
+  if (ext === "pdf") return "📄";
+
+  const kind = getFileKind(file);
+  if (kind === "image") return "🖼️";
+  if (kind === "text") return "📝";
+  return "📁";
 }
 
 function readAsDataURL(file) {
@@ -214,17 +234,7 @@ function renderConvertList() {
 
   convertItems.forEach((item, index) => {
     const li = document.createElement("li");
-    li.className = "file-item";
-
-    const top = document.createElement("div");
-    top.className = "file-item-top";
-
-    const name = document.createElement("div");
-    name.className = "file-name";
-    name.textContent = `${index + 1}. ${item.file.name}`;
-
-    const controls = document.createElement("div");
-    controls.className = "file-controls";
+    li.className = "file-item convert-item";
 
     const removeBtn = document.createElement("button");
     removeBtn.type = "button";
@@ -237,28 +247,43 @@ function renderConvertList() {
       updateStatus("변환 목록을 갱신했습니다.");
     });
 
-    controls.appendChild(removeBtn);
-    top.appendChild(name);
-    top.appendChild(controls);
+    const order = document.createElement("div");
+    order.className = "convert-order";
+    order.textContent = String(index + 1);
 
-    const meta = document.createElement("div");
-    meta.className = "file-meta";
-    meta.textContent = `${item.file.type || "unknown"} | ${formatSize(item.file.size)}`;
+    const icon = document.createElement("div");
+    icon.className = "convert-icon";
+    icon.textContent = getIconForFile(item.file);
+
+    const name = document.createElement("div");
+    name.className = "convert-name";
+    name.textContent = baseName(item.file.name);
+
+    const ext = document.createElement("div");
+    ext.className = "convert-ext";
+    ext.textContent = (getFileExtension(item.file.name) || "unknown").toUpperCase();
 
     const state = document.createElement("div");
-    state.className = "file-meta";
+    state.className = "convert-state";
     state.textContent = `상태: ${item.status}`;
 
     const link = document.createElement("a");
-    link.className = `download-link ${item.downloadUrl ? "" : "hidden"}`;
+    link.className = `download-link convert-download ${item.downloadUrl ? "" : "hidden"}`;
     link.href = item.downloadUrl || "#";
     link.download = `${baseName(item.file.name)}.pdf`;
-    link.textContent = "PDF 다운로드";
+    link.textContent = "다운로드";
 
-    li.appendChild(top);
-    li.appendChild(meta);
+    const controls = document.createElement("div");
+    controls.className = "convert-controls";
+    controls.appendChild(removeBtn);
+    controls.appendChild(link);
+
+    li.appendChild(order);
+    li.appendChild(icon);
+    li.appendChild(name);
+    li.appendChild(ext);
     li.appendChild(state);
-    li.appendChild(link);
+    li.appendChild(controls);
     convertList.appendChild(li);
   });
 }
@@ -349,10 +374,32 @@ function renderMergeGrid() {
 
 function renderSplitMeta() {
   if (!splitItem.pdfBytes) {
+    splitMeta.classList.add("is-empty");
     splitMeta.textContent = "선택된 PDF가 없습니다.";
     return;
   }
-  splitMeta.textContent = `선택 파일: ${splitItem.name} | 전체 페이지: ${splitItem.pageCount}`;
+  splitMeta.classList.remove("is-empty");
+  splitMeta.innerHTML = "";
+
+  const card = document.createElement("div");
+  card.className = "split-file-card";
+
+  const icon = document.createElement("div");
+  icon.className = "split-file-icon";
+  icon.textContent = "📄";
+
+  const name = document.createElement("div");
+  name.className = "split-file-name";
+  name.textContent = baseName(splitItem.name);
+
+  const pageCount = document.createElement("div");
+  pageCount.className = "split-page-count";
+  pageCount.textContent = `${splitItem.pageCount}장`;
+
+  card.appendChild(icon);
+  card.appendChild(name);
+  card.appendChild(pageCount);
+  splitMeta.appendChild(card);
 }
 
 function addToConvert(files) {
