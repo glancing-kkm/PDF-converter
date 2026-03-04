@@ -49,6 +49,17 @@ function startMergeDrag(event, card, itemId) {
   if (event.dataTransfer) event.dataTransfer.effectAllowed = "move";
 }
 
+function bindMergeDropTarget(target, itemId) {
+  target.addEventListener("dragover", (event) => {
+    event.preventDefault();
+  });
+  target.addEventListener("drop", (event) => {
+    event.preventDefault();
+    const sourceId = dragSourceId || event.dataTransfer?.getData("text/plain");
+    moveMergeItem(sourceId, itemId);
+  });
+}
+
 function updateStatus(message) {
   statusText.textContent = message;
 }
@@ -325,15 +336,7 @@ function renderMergeGrid() {
       card.classList.remove("dragging");
     });
 
-    card.addEventListener("dragover", (event) => {
-      event.preventDefault();
-    });
-
-    card.addEventListener("drop", (event) => {
-      event.preventDefault();
-      const sourceId = dragSourceId || event.dataTransfer?.getData("text/plain");
-      moveMergeItem(sourceId, item.id);
-    });
+    bindMergeDropTarget(card, item.id);
 
     const order = document.createElement("div");
     order.className = "merge-order";
@@ -347,6 +350,7 @@ function renderMergeGrid() {
       dragSourceId = null;
       card.classList.remove("dragging");
     });
+    bindMergeDropTarget(order, item.id);
 
     const icon = document.createElement("div");
     icon.className = "merge-icon";
@@ -360,10 +364,15 @@ function renderMergeGrid() {
       dragSourceId = null;
       card.classList.remove("dragging");
     });
+    icon.addEventListener("mousedown", (event) => {
+      event.preventDefault();
+    });
+    bindMergeDropTarget(icon, item.id);
 
     const name = document.createElement("div");
     name.className = "merge-name";
     name.textContent = baseName(item.name);
+    bindMergeDropTarget(name, item.id);
 
     const removeBtn = document.createElement("button");
     removeBtn.type = "button";
