@@ -223,8 +223,10 @@ function makePdfBlobUrl(bytes) {
 
 function renderConvertList() {
   convertList.innerHTML = "";
+  convertList.classList.remove("is-empty");
 
   if (convertItems.length === 0) {
+    convertList.classList.add("is-empty");
     const empty = document.createElement("li");
     empty.className = "file-item convert-empty";
     empty.textContent = "변환 된 파일이 없습니다";
@@ -348,6 +350,7 @@ function renderMergeGrid() {
     const icon = document.createElement("div");
     icon.className = "merge-icon";
     icon.textContent = "📄";
+    icon.title = "드래그해서 순서를 변경하세요";
 
     const name = document.createElement("div");
     name.className = "merge-name";
@@ -396,9 +399,16 @@ function renderSplitMeta() {
   pageCount.className = "split-page-count";
   pageCount.textContent = `${splitItem.pageCount}장`;
 
+  const removeBtn = document.createElement("button");
+  removeBtn.type = "button";
+  removeBtn.className = "remove-btn split-remove-btn";
+  removeBtn.textContent = "삭제";
+  removeBtn.addEventListener("click", clearSplitSource);
+
   card.appendChild(icon);
   card.appendChild(name);
   card.appendChild(pageCount);
+  card.appendChild(removeBtn);
   splitMeta.appendChild(card);
 }
 
